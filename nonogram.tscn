@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://buw87xpkk28kb"]
+
+[ext_resource type="Script" uid="uid://ceseteoxqx47o" path="res://nonogram.gd" id="1_4v81r"]
+[ext_resource type="PackedScene" uid="uid://78vu6u3gakvq" path="res://nonogram_square.tscn" id="2_fwbti"]
+
+[node name="Nonogram" type="GridContainer"]
+script = ExtResource("1_4v81r")
+NonogramSquareScene = ExtResource("2_fwbti")
+
+[node name="TopLeft" type="Panel" parent="."]
+layout_mode = 2

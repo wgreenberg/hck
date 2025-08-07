@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxnnrc2y5s3gm"]
+
+[ext_resource type="Script" uid="uid://c78n8ehhbqh4m" path="res://word_puzzle.gd" id="1_xk58y"]
+[ext_resource type="PackedScene" uid="uid://buw87xpkk28kb" path="res://nonogram.tscn" id="2_v5idj"]
+
+[node name="WordPuzzle" type="HBoxContainer"]
+script = ExtResource("1_xk58y")
+NonogramScene = ExtResource("2_v5idj")
+word = "kiracat"
+horizontal = false

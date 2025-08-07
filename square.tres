@@ -1,0 +1,5 @@
+[gd_resource type="Theme" format=3 uid="uid://464qnxf1rgq7"]
+
+[resource]
+CheckBox/constants/h_separation = 0
+CheckBox/font_sizes/font_size = 16
