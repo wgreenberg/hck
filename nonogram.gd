@@ -13,8 +13,8 @@ class_name Nonogram
 @export var clues_on_top = false
 var height: int
 var width: int
-var top_clues: Array[Array] = []
-var side_clues: Array[Array] = []
+var vertical_clues: Array[Array] = []
+var horizontal_clues: Array[Array] = []
 var squares: Array[Array] = []
 signal solved
 signal changed(pixels: Array[Array])
@@ -46,14 +46,14 @@ func count_runs(data: Array[Array], i: int, row_count: bool) -> Array[int]:
 func _init_clues() -> void:
 	height = len(pixels)
 	width = len(pixels[0])
-	
+
 	# instantiate top clues
 	for col in range(width):
-		top_clues.append(count_runs(pixels, col, false))
+		vertical_clues.append(count_runs(pixels, col, false))
 
 	# instantiate side clues
 	for row in range(height):
-		side_clues.append(count_runs(pixels, row, true))
+		horizontal_clues.append(count_runs(pixels, row, true))
 
 
 func get_square(row: int, col: int) -> NonogramSquare:
@@ -80,28 +80,29 @@ func get_current_solution() -> Array[Array]:
 	return result
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	_init_clues()
-	columns = width + 1
-	var grid_min_size = Vector2(32, 32)
-	for group in top_clues:
+func _add_vertical_clues(min_size: Vector2) -> void:
+	var topleft_panel = Panel.new()
+	add_child(topleft_panel)
+	for group in vertical_clues:
 		var clues = VBoxContainer.new()
-		clues.custom_minimum_size = grid_min_size
+		clues.custom_minimum_size = min_size
 		for clue in group:
 			var label = Label.new()
-			label.custom_minimum_size = grid_min_size
+			label.custom_minimum_size = min_size
 			label.text = str(clue)
 			clues.add_child(label)
 		add_child(clues)
+
+
+func _add_horizontal_clues_and_squares(min_size: Vector2) -> void:
 	var row = 0
-	for group in side_clues:
+	for group in horizontal_clues:
 		squares.append([])
 		var clues = HBoxContainer.new()
 		clues.custom_minimum_size = Vector2(32, 32)
 		for clue in group:
 			var label = Label.new()
-			label.custom_minimum_size = grid_min_size
+			label.custom_minimum_size = min_size
 			label.text = str(clue)
 			clues.add_child(label)
 		add_child(clues)
@@ -113,6 +114,18 @@ func _ready() -> void:
 			squares[-1].append(square)
 			add_child(square)
 		row += 1
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	_init_clues()
+	columns = width + 1
+	var grid_min_size = Vector2(32, 32)
+	if clues_on_top:
+		_add_vertical_clues(grid_min_size)
+	_add_horizontal_clues_and_squares(grid_min_size)
+	if not clues_on_top:
+		_add_vertical_clues(grid_min_size)
 
 
 func check_solution(solution: Array[Array]) -> bool:
@@ -133,14 +146,14 @@ func on_solution_update() -> void:
 		var automarked_rows = []
 		for row in range(self.height):
 			var runs = count_runs(solution, row, true)
-			var satisfied = runs.hash() == side_clues[row].hash()
+			var satisfied = runs.hash() == horizontal_clues[row].hash()
 			if satisfied:
 				automarked_rows.append(row)
 			for col in range(self.width):
 				get_square(row, col).set_automark(satisfied)
 		for col in range(self.width):
 			var runs = count_runs(solution, col, false)
-			var satisfied = runs.hash() == top_clues[col].hash()
+			var satisfied = runs.hash() == vertical_clues[col].hash()
 			for row in range(self.height):
 				if row in automarked_rows:
 					continue

@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://dvp1asqmmtf3y"]
+[gd_scene load_steps=3 format=3 uid="uid://dvp1asqmmtf3y"]
 
 [ext_resource type="Script" uid="uid://l2dff13ojr3h" path="res://editable_word.gd" id="1_b72n4"]
+[ext_resource type="PackedScene" uid="uid://b2nnrfx0xrlbr" path="res://editable_letter.tscn" id="2_bgmny"]
 
-[node name="EditableWord" type="Control"]
-layout_mode = 3
-anchors_preset = 0
+[node name="EditableWord" type="BoxContainer"]
 script = ExtResource("1_b72n4")
+length = 5
+EditableLetterScene = ExtResource("2_bgmny")

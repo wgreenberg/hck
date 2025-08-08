@@ -6,6 +6,3 @@
 [node name="Nonogram" type="GridContainer"]
 script = ExtResource("1_4v81r")
 NonogramSquareScene = ExtResource("2_fwbti")
-
-[node name="TopLeft" type="Panel" parent="."]
-layout_mode = 2

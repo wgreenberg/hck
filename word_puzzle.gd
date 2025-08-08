@@ -1,9 +1,11 @@
-extends HBoxContainer
+extends Control
 
 @export var NonogramScene: PackedScene
-@export var word: String
+@export var EditableWordScene: PackedScene
+@export var answer: String
 @export var alphabet: String = "abcdefghijklmnopqrstuvwxyz\".,! "
 @export var horizontal: bool = true
+var container: Container
 
 
 func to_binary_digits(n: int) -> Array[int]:
@@ -19,11 +21,10 @@ func to_binary_digits(n: int) -> Array[int]:
 func word_to_pixels(s: String) -> Array[Array]:
 	var result: Array[Array] = []
 	for i in range(s.length()):
-		var letter = s[i]
 		var n = alphabet.find(s[i].to_lower())
 		assert(n != -1, "couldn't find letter: " + s[i])
 		result.append(to_binary_digits(n + 1))
-	if self.horizontal:
+	if horizontal:
 		return transpose(result)
 	return result
 
@@ -46,12 +47,21 @@ func on_solved() -> void:
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var nonogram: Nonogram = NonogramScene.instantiate()
-	nonogram.pixels = word_to_pixels(self.word)
+	nonogram.pixels = word_to_pixels(answer)
 	nonogram.solved.connect(on_solved)
-	self.add_child(nonogram)
-	
-	var word_container = VBoxContainer.new()
-	self.add_child(word_container)
+
+	var editable_word: EditableWord = EditableWordScene.instantiate()
+	editable_word.length = len(answer)
+
+	if horizontal:
+		container = VBoxContainer.new()
+		container.add_child(editable_word)
+		container.add_child(nonogram)
+	else:
+		container = HBoxContainer.new()
+		container.add_child(editable_word)
+		container.add_child(nonogram)
+	add_child(container)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
