@@ -36,7 +36,7 @@ func handle_input(event: InputEvent):
 		else:
 			self.on_right_click()
 		var new_state = self.state
-	
+
 		if old_state == SquareState.On:
 			if new_state in [SquareState.Off, SquareState.Marked]:
 				self.emit_signal("changed")
@@ -60,6 +60,17 @@ func update_state(new_state: SquareState) -> void:
 		self.texture_normal = tex_marked
 	else:
 		self.texture_normal = tex_on
+
+
+func clear() -> void:
+	self.update_state(SquareState.Off)
+
+
+func set_on(on: int) -> void:
+	if on == 0:
+		self.update_state(SquareState.AutoMarked)
+	else:
+		self.update_state(SquareState.On)
 
 
 func set_automark(automark: bool) -> void:

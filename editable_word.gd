@@ -2,21 +2,16 @@ extends BoxContainer
 class_name EditableWord
 
 
-enum EditableWordState {
-	Inactive,
-	Focused,
-}
-
-
 @export var length: int
 @export var horizontal: bool = true
 @export var EditableLetterScene: PackedScene
 var letter_container: Container
 var letters: Array[String] = []
 var letter_buttons: Array[Button] = []
-
 var mouseover_letter: EditableLetter = null
 var focused_button_index: int = -1
+signal letter(letter: String, index: int)
+signal delete(index: int)
 
 
 # Called when the node enters the scene tree for the first time.
@@ -49,12 +44,17 @@ func _input(event: InputEvent) -> void:
 		if event.keycode == KEY_ESCAPE:
 			clear_focus()
 		elif event.keycode == KEY_DELETE or event.keycode == KEY_BACKSPACE:
+			emit_signal("delete", focused_letter.index)
 			focused_letter.clear_letter()
 			focus_prev_letter()
 		elif event.keycode >= KEY_A and event.keycode <= KEY_Z:
-
 			focused_letter.set_letter(event)
+			emit_signal("letter", focused_letter.label.text, focused_letter.index)
 			focus_next_letter()
+
+
+func set_letter(index: int, letter: String) -> void:
+	letter_buttons[index].label.text = letter.to_upper()
 
 
 func clear_focus() -> void:
@@ -83,16 +83,6 @@ func _on_mouse_exited() -> void:
 
 func _on_mouse_entered(i: int) -> void:
 	mouseover_letter = letter_buttons[i]
-
-
-func _update_from_state() -> void:
-	if self.state == EditableWordState.Inactive:
-		for button in letter_buttons:
-			pass
-	else:
-		for i in range(len(letter_buttons)):
-			var letter = letter_buttons[i]
-			pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

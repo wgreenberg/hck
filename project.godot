@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="hackergram"
-run/main_scene="uid://buw87xpkk28kb"
+run/main_scene="uid://bk2bwc1ytdl01"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 

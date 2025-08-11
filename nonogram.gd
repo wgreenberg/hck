@@ -61,6 +61,32 @@ func get_square(row: int, col: int) -> NonogramSquare:
 	return squares[row][col] as NonogramSquare
 
 
+func clear_column(col: int) -> void:
+	for row in range(height):
+		squares[row][col].clear()
+
+
+func clear_row(row: int) -> void:
+	for col in range(width):
+		squares[row][col].clear()
+
+
+func set_column(col: int, col_pixels: Array[int]) -> void:
+	assert(len(pixels) == height)
+	for row in range(height):
+		squares[row][col].set_on(col_pixels[row])
+	if self.check_solution(get_current_solution()):
+		self.emit_signal("solved")
+
+
+func set_row(row: int, row_pixels: Array[int]) -> void:
+	assert(len(pixels) == width)
+	for col in range(width):
+		squares[row][col].set_on(row_pixels[col])
+	if self.check_solution(get_current_solution()):
+		self.emit_signal("solved")
+
+
 func set_col_lock(col: int, lock: bool) -> void:
 	for row in range(0, height):
 		self.get_square(row, col).update_locked(lock)

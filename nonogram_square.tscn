@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://78vu6u3gakvq"]
+[gd_scene load_steps=8 format=3 uid="uid://78vu6u3gakvq"]
 
 [ext_resource type="Theme" uid="uid://464qnxf1rgq7" path="res://square.tres" id="1_17tyc"]
 [ext_resource type="Script" uid="uid://djbin0f3fhbxf" path="res://nonogram_square.gd" id="1_kyj10"]
+[ext_resource type="Texture2D" uid="uid://sv44ixbfumh2" path="res://art/x.png" id="3_iohov"]
 
 [sub_resource type="Gradient" id="Gradient_17tyc"]
 
@@ -16,12 +17,6 @@ colors = PackedColorArray(0, 0, 0, 1, 0.801724, 0.801724, 0.801724, 1, 1, 1, 1, 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_o8php"]
 gradient = SubResource("Gradient_pjk6c")
 
-[sub_resource type="Gradient" id="Gradient_iohov"]
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_pjk6c"]
-gradient = SubResource("Gradient_iohov")
-fill_from = Vector2(0.376068, 0.57265)
-
 [node name="NonogramSquare" type="TextureButton"]
 offset_right = 40.0
 offset_bottom = 40.0
@@ -30,4 +25,4 @@ button_mask = 7
 script = ExtResource("1_kyj10")
 tex_on = SubResource("GradientTexture2D_iohov")
 tex_off = SubResource("GradientTexture2D_o8php")
-tex_marked = SubResource("GradientTexture2D_pjk6c")
+tex_marked = ExtResource("3_iohov")
