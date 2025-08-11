@@ -18,6 +18,7 @@ var horizontal_clues: Array[Array] = []
 var squares: Array[Array] = []
 signal solved
 signal changed(pixels: Array[Array])
+signal satisfied(index: int, is_row: bool)
 
 
 func count_runs(data: Array[Array], i: int, row_count: bool) -> Array[int]:
@@ -81,7 +82,7 @@ func get_current_solution() -> Array[Array]:
 
 
 func _add_vertical_clues(min_size: Vector2) -> void:
-	var topleft_panel = Panel.new()
+	var topleft_panel = Control.new()
 	add_child(topleft_panel)
 	for group in vertical_clues:
 		var clues = VBoxContainer.new()
@@ -99,7 +100,7 @@ func _add_horizontal_clues_and_squares(min_size: Vector2) -> void:
 	for group in horizontal_clues:
 		squares.append([])
 		var clues = HBoxContainer.new()
-		clues.custom_minimum_size = Vector2(32, 32)
+		clues.custom_minimum_size = min_size
 		for clue in group:
 			var label = Label.new()
 			label.custom_minimum_size = min_size
@@ -139,25 +140,29 @@ func check_solution(solution: Array[Array]) -> bool:
 func on_solution_update() -> void:
 	var solution = get_current_solution()
 	self.emit_signal("changed", solution)
+
+	# Check for satisfied rows/columns
+	var automarked_rows = []
+	for row in range(self.height):
+		var runs = count_runs(solution, row, true)
+		var is_satisfied = runs.hash() == horizontal_clues[row].hash()
+		if is_satisfied:
+			emit_signal("satisfied", row, true)
+			automarked_rows.append(row)
+		for col in range(self.width):
+			get_square(row, col).set_automark(is_satisfied)
+	for col in range(self.width):
+		var runs = count_runs(solution, col, false)
+		var is_satisfied = runs.hash() == vertical_clues[col].hash()
+		if is_satisfied:
+			emit_signal("satisfied", col, false)
+		for row in range(self.height):
+			if row in automarked_rows:
+				continue
+			get_square(row, col).set_automark(is_satisfied)
+
 	if self.check_solution(solution):
 		self.emit_signal("solved")
-	else:
-		# Auto-mark any satisfied rows or columns
-		var automarked_rows = []
-		for row in range(self.height):
-			var runs = count_runs(solution, row, true)
-			var satisfied = runs.hash() == horizontal_clues[row].hash()
-			if satisfied:
-				automarked_rows.append(row)
-			for col in range(self.width):
-				get_square(row, col).set_automark(satisfied)
-		for col in range(self.width):
-			var runs = count_runs(solution, col, false)
-			var satisfied = runs.hash() == vertical_clues[col].hash()
-			for row in range(self.height):
-				if row in automarked_rows:
-					continue
-				get_square(row, col).set_automark(satisfied)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

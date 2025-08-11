@@ -10,4 +10,4 @@ anchors_preset = 0
 script = ExtResource("1_xk58y")
 NonogramScene = ExtResource("2_v5idj")
 EditableWordScene = ExtResource("3_0tkd6")
-answer = "kiracat"
+answer = "kangaroo"
